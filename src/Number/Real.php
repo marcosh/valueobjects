@@ -13,7 +13,7 @@ class Real implements ValueObjectInterface, NumberInterface
     /**
      * Returns a Real object given a PHP native float as parameter.
      *
-     * @param  float  $number
+     * @param  float  $value
      * @return static
      */
     public static function fromNative()
@@ -26,7 +26,7 @@ class Real implements ValueObjectInterface, NumberInterface
     /**
      * Returns a Real object given a PHP native float as parameter.
      *
-     * @param float $number
+     * @param float $value
      */
     public function __construct($value)
     {
