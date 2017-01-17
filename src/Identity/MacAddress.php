@@ -4,6 +4,8 @@ namespace ValueObjects\Identity;
 
 use ValueObjects\Exception\InvalidNativeArgumentException;
 use ValueObjects\StringLiteral\StringLiteral;
+use ValueObjects\Util\Util;
+use ValueObjects\ValueObjectInterface;
 
 class MacAddress extends StringLiteral
 {
@@ -21,5 +23,19 @@ class MacAddress extends StringLiteral
         }
 
         $this->value = $filteredValue;
+    }
+
+    private function lowercaseHex()
+    {
+        return strtolower(str_replace(['-', ':', '.'], '', $this->toNative()));
+    }
+
+    public function sameValueAs(ValueObjectInterface $macAddress)
+    {
+        if (false === Util::classEquals($this, $macAddress)) {
+            return false;
+        }
+
+        return $this->lowercaseHex() === $macAddress->lowercaseHex();
     }
 }

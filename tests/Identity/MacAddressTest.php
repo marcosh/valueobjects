@@ -36,4 +36,20 @@ class MacAddressTest extends TestCase
     {
         new MacAddress('1a-2B-3c-4D');
     }
+
+    public function testDashMacAddressAndColonMacAddressHaveSameValue()
+    {
+        $macWithDash = new MacAddress('1A-2b-3C-4d-5E-6f');
+        $macWithColon = new MacAddress('1A:2b:3C:4d:5E:6f');
+
+        $this->assertTrue($macWithDash->sameValueAs($macWithColon));
+    }
+
+    public function testDashMacAddressAndDotMacAddressHaveSameValue()
+    {
+        $macWithDash = new MacAddress('1A-2b-3C-4d-5E-6f');
+        $macWithDot = new MacAddress('1A2b.3C4d.5E6f');
+
+        $this->assertTrue($macWithDash->sameValueAs($macWithDot));
+    }
 }
