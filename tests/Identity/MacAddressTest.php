@@ -3,53 +3,98 @@
 namespace ValueObjects\Tests\Identity;
 
 use ValueObjects\Identity\MacAddress;
-use ValueObjects\Tests\TestCase;
 
-class MacAddressTest extends TestCase
+final class MacAddressTest extends \PHPUnit_Framework_TestCase
 {
+    /** @expectedException ValueObjects\Exception\InvalidNativeArgumentException */
+    public function testTooBigNativeArgument()
+    {
+        new MacAddress(pow(2, 48));
+    }
+
+    /** @expectedException ValueObjects\Exception\InvalidNativeArgumentException */
+    public function testNegativeNativeArgument()
+    {
+        new MacAddress(-1);
+    }
+
+    public function testValidNativeArgument()
+    {
+        $macAddress = new MacAddress(pow(2, 48) -1);
+        $this->assertInstanceOf('ValueObjects\Identity\MacAddress', $macAddress);
+    }
+
     public function testValidMacAddressWithDash()
     {
-        $macAddress = new MacAddress('1A-2b-3C-4d-5E-6f');
+        $macAddress = MacAddress::fromString('1A-2b-3C-4d-5E-6f');
         $this->assertInstanceOf('ValueObjects\Identity\MacAddress', $macAddress);
     }
 
     public function testValidMacAddressWithColon()
     {
-        $macAddress = new MacAddress('1A:2b:3C:4d:5E:6f');
+        $macAddress = MacAddress::fromString('1A:2b:3C:4d:5E:6f');
         $this->assertInstanceOf('ValueObjects\Identity\MacAddress', $macAddress);
     }
 
     public function testValidMacAddressWithDot()
     {
-        $macAddress = new MacAddress('1A2b.3C4d.5E6f');
+        $macAddress = MacAddress::fromString('1A2b.3C4d.5E6f');
         $this->assertInstanceOf('ValueObjects\Identity\MacAddress', $macAddress);
     }
 
     /** @expectedException ValueObjects\Exception\InvalidNativeArgumentException */
     public function testInvalidMacAddressWithBothDashAndColon()
     {
-        new MacAddress('1a:2B-3c:4D-5e');
+        MacAddress::fromString('1a:2B-3c:4D-5e');
     }
 
     /** @expectedException ValueObjects\Exception\InvalidNativeArgumentException */
     public function testInvalidMacAddressWithWrongLength()
     {
-        new MacAddress('1a-2B-3c-4D');
+        MacAddress::fromString('1a-2B-3c-4D');
     }
 
     public function testDashMacAddressAndColonMacAddressHaveSameValue()
     {
-        $macWithDash = new MacAddress('1A-2b-3C-4d-5E-6f');
-        $macWithColon = new MacAddress('1A:2b:3C:4d:5E:6f');
+        $macWithDash = MacAddress::fromString('1A-2b-3C-4d-5E-6f');
+        $macWithColon = MacAddress::fromString('1A:2b:3C:4d:5E:6f');
 
         $this->assertTrue($macWithDash->sameValueAs($macWithColon));
     }
 
     public function testDashMacAddressAndDotMacAddressHaveSameValue()
     {
-        $macWithDash = new MacAddress('1A-2b-3C-4d-5E-6f');
-        $macWithDot = new MacAddress('1A2b.3C4d.5E6f');
+        $macWithDash = MacAddress::fromString('1A-2b-3C-4d-5E-6f');
+        $macWithDot = MacAddress::fromString('1A2b.3C4d.5E6f');
 
         $this->assertTrue($macWithDash->sameValueAs($macWithDot));
+    }
+
+    public function testToStringWithDash()
+    {
+        $macAddress = MacAddress::fromString('1a-2b-3c-4d-5e-6f');
+
+        $this->assertEquals('1a-2b-3c-4d-5e-6f', $macAddress->toStringWithDash());
+    }
+
+    public function testToStringWithColon()
+    {
+        $macAddress = MacAddress::fromString('00:00:00:00:00:00');
+
+        $this->assertEquals('00:00:00:00:00:00', $macAddress->toStringWithColon());
+    }
+
+    public function testToStringWithDot()
+    {
+        $macAddress = MacAddress::fromString('ffff.ffff.ffff');
+
+        $this->assertEquals('ffff.ffff.ffff', $macAddress->toStringWithDot());
+    }
+
+    public function testSomething()
+    {
+        $mac = new MacAddress(pow(2, 48) - 6549687515);
+
+        var_dump(pow(2, 48) - 6549687515, $mac->toStringWithDash());
     }
 }
