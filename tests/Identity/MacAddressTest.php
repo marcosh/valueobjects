@@ -90,11 +90,4 @@ final class MacAddressTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('ffff.ffff.ffff', $macAddress->toStringWithDot());
     }
-
-    public function testSomething()
-    {
-        $mac = new MacAddress(pow(2, 48) - 6549687515);
-
-        var_dump(pow(2, 48) - 6549687515, $mac->toStringWithDash());
-    }
 }
