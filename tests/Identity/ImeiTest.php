@@ -13,21 +13,22 @@ class ImeiTest extends TestCase
         $this->assertInstanceOf('ValueObjects\Identity\Imei', $imei);
     }
 
-    /** @expectedException ValueObjects\Exception\InvalidNativeArgumentException */
-    public function testInvalidImeiTooShort()
+    public function invalidImeiDataProvider()
     {
-        new Imei('49015420323751');
+        return [
+            ['49015420323751'], // too short
+            ['4901542032375183'], // too long
+            ['490154203237517'] // wrong checksum
+        ];
     }
 
-    /** @expectedException ValueObjects\Exception\InvalidNativeArgumentException */
-    public function testInvalidImeiTooLong()
+    /**
+     * @dataProvider invalidImeiDataProvider
+     */
+    public function testInvalidImei($imei)
     {
-        new Imei('4901542032375183');
-    }
+        $this->setExpectedException('ValueObjects\Exception\InvalidNativeArgumentException');
 
-    /** @expectedException ValueObjects\Exception\InvalidNativeArgumentException */
-    public function testInvalidImeiWrongChecksum()
-    {
-        new Imei('490154203237517');
+        new Imei($imei);
     }
 }
